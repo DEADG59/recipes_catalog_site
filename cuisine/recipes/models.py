@@ -1,6 +1,6 @@
 from django.db import models
 from django.utils import timezone
-from django.contrib.auth.models import  User
+from django.contrib.auth.models import User
 
 
 class Recipe(models.Model):
@@ -15,7 +15,7 @@ class Recipe(models.Model):
                                on_delete=models.CASCADE,
                                related_name='recipes_recipes')
     description = models.TextField()
-    publish = models.DateTimeField(default=timezone.now())
+    publish = models.DateTimeField(default=timezone.now)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     status = models.CharField(max_length=250,
