@@ -53,3 +53,24 @@ class Recipe(models.Model):
         ]
     def __str__(self):
         return self.title
+
+
+class Product(models.Model):
+    title = models.CharField(max_length=250)
+
+
+class Measure(models.Model):
+    title = models.CharField(max_length=250)
+
+
+class Ingredient(models.Model):
+    recipe = models.ForeignKey(Recipe,
+                                on_delete=models.CASCADE,
+                                related_name='recipes_ingredient')
+    product = models.ForeignKey(Product,
+                                on_delete=models.CASCADE,
+                                related_name='recipes_product')
+    amount = models.IntegerField()
+    measure = models.ForeignKey(Measure,
+                                on_delete=models.CASCADE,
+                                related_name='recipes_measure')

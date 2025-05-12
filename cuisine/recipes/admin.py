@@ -1,11 +1,10 @@
 from django.contrib import admin
-from .models import Recipe, Cuisine
+from .models import Recipe, Cuisine, Product, Measure, Ingredient
 
 
 @admin.register(Cuisine)
 class CuisineAdmin(admin.ModelAdmin):
     list_display = ['title']
-    list_filter = ['title']
     search_fields = ['title']
 
 
@@ -18,3 +17,22 @@ class RecipeAdmin(admin.ModelAdmin):
     raw_id_fields = ['author']
     date_hierarchy = 'publish'
     ordering = ['status', 'publish']
+
+
+@admin.register(Product)
+class ProductAdmin(admin.ModelAdmin):
+    list_display = ['title']
+    search_fields = ['title']
+
+
+@admin.register(Measure)
+class MeasureAdmin(admin.ModelAdmin):
+    list_display = ['title']
+    search_fields = ['title']
+
+
+@admin.register(Ingredient)
+class IngredientAdmin(admin.ModelAdmin):
+    list_display = ['recipe', 'product', 'amount', 'measure']
+    search_fields = ['recipe', 'product']
+    raw_id_fields = ['recipe', 'product', 'measure']
