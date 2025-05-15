@@ -1,0 +1,18 @@
+{% extends 'recipes/base.html' %}
+
+{% block title %}my site{% endblock %}
+
+{% block content %}
+    <h1>My site</h1>
+    {% for recipe in recipes %}
+        <h2>
+            <a href="{% url 'recipes:recipe_detail' recipe.id %}">
+                {{ recipe.title }}
+            </a>
+        </h2>
+        <p class="date">
+            Published {{ recipe.publish }} by {{ recipe.author }}
+        </p>
+        {{ recipe.body|truncatewords:30|linebreaks }}
+    {% endfor %}
+{% endblock %}
