@@ -80,6 +80,12 @@ DATABASES = {
         'NAME': 'recipes',
         'USER': 'recipes',
         'PASSWORD': 'password',
+        'HOST': 'localhost',
+        'TEST': {
+            'NAME': 'test_db',
+            'USER': 'recipes',
+            'PASSWORD': 'password'
+        }
     }
 }
 
