@@ -4,12 +4,21 @@
 
 {% block content %}
     <h1>{{ recipe.title }}</h1>
-    <p>cuisines:</p>
-    {% for cuisine in cuisines %}
-        <p>{{ cuisine.title }}</p>
-    {% endfor %}
+    {% if cuisines %}
+        <p>cuisines:</p>
+        {% for cuisine in cuisines %}
+            <p>{{ cuisine.title }}</p>
+        {% endfor %}
+    {% endif %}
     <p>Author: {{ recipe.author.username }}</p>
     <p class="date">Published: {{ recipe.publish }}</p>
+    {% if ingredients %}
+        <ul>
+        {% for ingredient in ingredients %}
+            <li>{{ ingredient.product.title }} {{ ingredient.amount }} {{ ingredient.measure.title }}</li>
+        {% endfor %}
+        </ul>
+    {% endif %}
     <p>Description:</p>
     <p>{{ recipe.description|linebreaks }}</p>
 {% endblock %}

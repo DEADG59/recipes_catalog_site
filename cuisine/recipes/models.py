@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
+from django.urls import reverse
 
 
 class Cuisine(models.Model):
@@ -28,7 +29,8 @@ class Recipe(models.Model):
 
 
     title = models.CharField(max_length=250)
-    slug = models.SlugField(max_length=250)
+    slug = models.SlugField(max_length=250,
+                            unique_for_date='publish')
     author = models.ForeignKey(User,
                                on_delete=models.CASCADE,
                                related_name='recipes_recipe')
@@ -51,8 +53,16 @@ class Recipe(models.Model):
         indexes = [
             models.Index(fields=['-publish'])
         ]
+
     def __str__(self):
         return self.title
+
+    def get_absolute_url(self):
+        return reverse('recipes:recipe_detail',
+                       args=[self.publish.year,
+                             self.publish.month,
+                             self.publish.day,
+                             self.slug])
 
 
 class Product(models.Model):
