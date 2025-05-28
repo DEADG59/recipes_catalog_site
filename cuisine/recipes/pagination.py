@@ -3,15 +3,14 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 def Pagination(pages_both_sides: int, paginator: Paginator, page_number: str) -> dict:
     try:
-        recipes = paginator.page(page_number)
+        page_obj = paginator.page(page_number)
     except PageNotAnInteger:
         # Если page_number не целое число, выдать первую страницу
-        recipes = paginator.page(1)
+        page_obj = paginator.page(1)
     except EmptyPage:
         # Если page_number вне диапозона, выдать последнюю страницу
-        recipes = paginator.page(paginator.num_pages)
-
-    page_num = recipes.number
+        page_obj = paginator.page(paginator.num_pages)
+    page_num = page_obj.number
     page_num_end = paginator.num_pages
     # В зависимости от текущей страницы, определяет какие номера страниц показывать
     if page_num == 1:
@@ -27,7 +26,7 @@ def Pagination(pages_both_sides: int, paginator: Paginator, page_number: str) ->
     left_pages_more = 1 if 0 < page_num-1-pages_both_sides else 0
     right_pages_more = page_num_end if page_num_end > page_num+pages_both_sides else 0
 
-    return {'recipes': recipes,
+    return {'page_obj': page_obj,
             'left_pages': left_pages,
             'right_pages': right_pages,
             'left_pages_more': left_pages_more,
