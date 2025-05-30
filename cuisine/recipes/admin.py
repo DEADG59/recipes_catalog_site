@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Recipe, Cuisine, Product, Measure, Ingredient
+from .models import *
 
 
 @admin.register(Cuisine)
@@ -36,3 +36,10 @@ class IngredientAdmin(admin.ModelAdmin):
     list_display = ['recipe', 'product', 'amount', 'measure']
     search_fields = ['recipe', 'product']
     raw_id_fields = ['recipe', 'product', 'measure']
+
+
+@admin.register(Comment)
+class CommentAdmin(admin.ModelAdmin):
+    list_display = ['name', 'email', 'recipe', 'created', 'active']
+    list_filter = ['name', 'created', 'updated']
+    search_fields = ['name', 'email', 'body']

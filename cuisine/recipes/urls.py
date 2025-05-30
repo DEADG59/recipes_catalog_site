@@ -6,4 +6,5 @@ app_name = 'recipes'
 urlpatterns = [
     path('', views.RecipeListView.as_view(), name='recipe_list'),
     path('<int:year>/<int:month>/<int:day>/<slug:recipe_slug>', views.RecipeDetailView.as_view(), name='recipe_detail'),
+    path('<int:recipe_id>/comment/', views.CommentCreate.as_view(), name='recipe_comment'),
 ]

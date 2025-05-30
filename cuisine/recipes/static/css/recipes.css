@@ -90,3 +90,9 @@ input[type=submit] {
     font-size:12px;
     color:#666;
 }
+
+.add-comment {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+}

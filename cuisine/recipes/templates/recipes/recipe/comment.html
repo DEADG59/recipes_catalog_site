@@ -1,0 +1,8 @@
+<div class="add-comment">
+    <h2>Add a new comment</h2>
+    <form action="{% url 'recipes:recipe_comment' recipe.id %}" method="post">
+        {{ form.as_p }}
+        {% csrf_token %}
+        <p><input type="submit" value="Add comment"></p>
+    </form>
+</div>

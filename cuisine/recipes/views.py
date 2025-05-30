@@ -1,8 +1,10 @@
 from django.shortcuts import render, get_object_or_404
-from .models import Recipe
+from django.urls import reverse_lazy
+from .models import Recipe, Comment
 from .pagination import Pagination
 from django.core.paginator import Paginator
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, CreateView
+from .forms import CommentForm
 
 
 class RecipeListView(ListView):
@@ -36,6 +38,26 @@ class RecipeDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         cuisines = self.object.cuisine.all()
         ingredients = self.object.recipes_ingredient.all()
+        comments = self.object.comments.filter(active=True)
+        form = CommentForm()
         context['cuisines'] = cuisines
         context['ingredients'] = ingredients
+        context['comments'] = comments
+        context['form'] = form
         return context
+
+
+class CommentCreate(CreateView):
+    model = Comment
+    form_class = CommentForm
+    def form_valid(self, form):
+        comment = form.save(commit=False)
+        recipe = get_object_or_404(Recipe,
+                                    id=self.kwargs['recipe_id'],
+                                    status=Recipe.Status.PUBLISHED)
+        comment.recipe = recipe
+        self.success_url = reverse_lazy('recipes:recipe_detail', args=[recipe.publish.year,
+                                                                       recipe.publish.month,
+                                                                       recipe.publish.day,
+                                                                       recipe.slug])
+        return super().form_valid(form)
