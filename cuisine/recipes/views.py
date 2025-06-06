@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, Http404
 from django.urls import reverse_lazy
 from .models import Recipe, Comment
 from .pagination import Pagination
@@ -23,6 +23,7 @@ class RecipeListView(ListView):
         context[self.context_object_name] = context['objects_list']
         return context
 
+
 class RecipeDetailView(DetailView):
     model = Recipe
     context_object_name = 'recipe'
@@ -33,6 +34,7 @@ class RecipeDetailView(DetailView):
                                   status=Recipe.Status.PUBLISHED,
                                   slug=self.kwargs['recipe_slug'],
                                   publish__date=f"{self.kwargs['year']}-{self.kwargs['month']}-{self.kwargs['day']}")
+
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -47,9 +49,14 @@ class RecipeDetailView(DetailView):
         return context
 
 
-class CommentCreate(CreateView):
+class CommentCreateView(CreateView):
     model = Comment
     form_class = CommentForm
+
+    def get(self, request, *args, **kwargs):
+        raise Http404()
+
+
     def form_valid(self, form):
         comment = form.save(commit=False)
         recipe = get_object_or_404(Recipe,
