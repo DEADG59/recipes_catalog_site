@@ -2,6 +2,10 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 
 def Pagination(pages_both_sides: int, paginator: Paginator, page_number: str) -> dict:
+    '''
+    pages_both_sides - кол-во показываемых номеров страниц до и после текущего номера страницы
+    page_number - номер текущей страницы
+    '''
     try:
         page_obj = paginator.page(page_number)
     except PageNotAnInteger:
