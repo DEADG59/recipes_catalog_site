@@ -3,43 +3,15 @@ from django.contrib.auth.models import User
 from ..models import *
 
 
-class CuisineModelTest(TestCase):
-    @classmethod
-    def setUpTestData(cls):
-        cls.cuisine = Cuisine.objects.create(title='test_title')
-
-
-    @classmethod
-    def tearDownClass(cls):
-        cls.cuisine.delete()
-        super().tearDownClass()
-
-
-    def test_title_max_length(self):
-        max_length = self.cuisine._meta.get_field('title').max_length
-        self.assertEqual(max_length, 250)
-
-
-    def test_title_ordering(self):
-        ordering = self.cuisine._meta.ordering
-        self.assertEqual(ordering, ['title'])
-
-
-    def test_object_name_is_title(self):
-        self.assertEqual(self.cuisine.title, str(self.cuisine))
-
-
 class RecipeModelTest(TestCase):
     @classmethod
     def setUpTestData(cls):
         cls.user = User.objects.create(username='test_user')
-        cls.cuisine = Cuisine.objects.create(title='test_cuisine')
         cls.recipe = Recipe.objects.create(title='test_title',
                                            slug='test_slug',
                                            author=cls.user,
                                            description='test_description',
                                            status=Recipe.Status.PUBLISHED)
-        cls.recipe.cuisine.set([cls.cuisine.id])
         Recipe.objects.create(title='test_title_draft',
                               slug='test_title_draft',
                               author=cls.user,
@@ -50,7 +22,6 @@ class RecipeModelTest(TestCase):
     @classmethod
     def tearDownClass(cls):
         cls.user.delete()
-        cls.cuisine.delete()
         super().tearDownClass()
 
 
@@ -73,12 +44,6 @@ class RecipeModelTest(TestCase):
     def test_author_foreign_key(self):
         author = self.recipe.author.username
         self.assertEqual(author, 'test_user')
-
-
-    def test_cuisine_many_to_many(self):
-        cuisine = self.recipe.cuisine.all()[0]
-        self.assertEqual(str(cuisine), 'test_cuisine')
-
 
 
     def test_publish_default(self):

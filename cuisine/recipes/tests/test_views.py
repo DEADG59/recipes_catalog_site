@@ -43,8 +43,7 @@ class RecipeListViewTest(TestCase):
         view = RecipeListView()
         self.assertEqual(view.paginate_by, 3)
         self.assertEqual(view.context_object_name, 'recipes')
-        queryset = view.queryset
-        self.assertEqual(list(queryset), list(Recipe.published.all()))
+        self.assertEqual(view.model, Recipe)
 
 
     def test_pagination_is_three(self):
@@ -83,7 +82,6 @@ class RecipeDetailViewTest(TestCase):
     @classmethod
     def setUpTestData(cls):
         cls.user = User.objects.create(username='test_user')
-        cls.cuisine = Cuisine.objects.create(title='test_cuisine')
         cls.date = datetime.datetime(2025, 1, 20, 15, 30, 59)
         cls.recipe = Recipe.objects.create(title='test recipe',
                                        slug='test-recipe',
@@ -93,7 +91,6 @@ class RecipeDetailViewTest(TestCase):
                                        created=cls.date,
                                        updated=cls.date,
                                        status=Recipe.Status.PUBLISHED)
-        cls.recipe.cuisine.set([cls.cuisine.id])
         cls.product = Product.objects.create(title='test_product')
         cls.measure = Measure.objects.create(title='test_measure')
         cls.ingredient = Ingredient(recipe=cls.recipe,
@@ -112,7 +109,6 @@ class RecipeDetailViewTest(TestCase):
     @classmethod
     def tearDownClass(cls):
         cls.user.delete()
-        cls.cuisine.delete()
         cls.product.delete()
         cls.measure.delete()
         del cls.url
@@ -153,7 +149,6 @@ class RecipeDetailViewTest(TestCase):
         resp = self.client.get(self.url)
         self.assertEqual(resp.status_code, 200)
         obj = resp.context['object']
-        self.assertEqual(list(resp.context['cuisines']), list(obj.cuisine.all()))
         self.assertEqual(list(resp.context['ingredients']), list(obj.recipes_ingredient.all()))
         self.assertEqual(list(resp.context['comments']), list(obj.comments.filter(active=True)))
         self.assertEqual(resp.context['form'].declared_fields, CommentForm().declared_fields)

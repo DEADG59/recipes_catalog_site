@@ -5,19 +5,6 @@ from django.urls import reverse
 from taggit.managers import TaggableManager
 
 
-class Cuisine(models.Model):
-    title = models.CharField(max_length=250)
-
-    class Meta:
-        ordering = ['title']
-        indexes = [
-            models.Index(fields=['title'])
-        ]
-
-    def __str__(self):
-        return self.title
-
-
 class PublishedManager(models.Manager):
     def get_queryset(self):
         return super().get_queryset().filter(status=Recipe.Status.PUBLISHED)
@@ -35,9 +22,6 @@ class Recipe(models.Model):
     author = models.ForeignKey(User,
                                on_delete=models.CASCADE,
                                related_name='recipes_recipe')
-    cuisine = models.ManyToManyField(Cuisine,
-                                     related_name='recipes_cuisine',
-                                     blank=True)
     description = models.TextField()
     publish = models.DateTimeField(default=timezone.now)
     created = models.DateTimeField(auto_now_add=True)

@@ -5,22 +5,33 @@ from .pagination import Pagination
 from django.core.paginator import Paginator
 from django.views.generic import ListView, DetailView, CreateView
 from .forms import CommentForm
+from taggit.models import Tag
 
 
 class RecipeListView(ListView):
-    queryset = Recipe.published.all()
+    model = Recipe
     context_object_name = 'recipes'
     paginate_by = 3
     template_name = 'recipes/recipe/list.html'
 
+    def get_queryset(self):
+        queryset = Recipe.published.all()
+        self.tag = None
+        if 'tag_slug' in self.kwargs:
+            self.tag = get_object_or_404(Tag, slug=self.kwargs['tag_slug'])
+            queryset = queryset.filter(tags__in=[self.tag])
+        return queryset
+
+
     def get_context_data(self, **kwargs):
-        paginator = Paginator(self.queryset, self.paginate_by)
+        paginator = Paginator(self.get_queryset(), self.paginate_by)
         page_number = self.request.GET.get('page', 1)
         context = Pagination(5, paginator, page_number)
         context['paginator'] = paginator
         context['is_paginated'] = True
         context['objects_list'] = context['page_obj'].object_list
         context[self.context_object_name] = context['objects_list']
+        context['tag'] = self.tag
         return context
 
 
@@ -38,11 +49,9 @@ class RecipeDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        cuisines = self.object.cuisine.all()
         ingredients = self.object.recipes_ingredient.all()
         comments = self.object.comments.filter(active=True)
         form = CommentForm()
-        context['cuisines'] = cuisines
         context['ingredients'] = ingredients
         context['comments'] = comments
         context['form'] = form

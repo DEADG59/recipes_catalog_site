@@ -4,12 +4,19 @@
 
 {% block content %}
     <h1>{{ recipe.title }}</h1>
-    {% if cuisines %}
-        <p>cuisines:</p>
-        {% for cuisine in cuisines %}
-            <p>{{ cuisine.title }}</p>
-        {% endfor %}
-    {% endif %}
+    {% with recipe.tags.all as tags %}
+        {% if tags %}
+            <p class="tags">
+            Tags:
+            {% for tag in tags %}
+                <a href="{% url 'recipes:recipe_list_tag' tag.slug %}">
+                    {{ tag.name }}
+                </a>
+                {% if not forloop.last %}, {% endif %}
+            {% endfor %}
+            </p>
+        {% endif %}
+    {% endwith %}
     <p>Author: {{ recipe.author.username }}</p>
     <p class="date">Published: {{ recipe.publish }}</p>
     {% if ingredients %}
