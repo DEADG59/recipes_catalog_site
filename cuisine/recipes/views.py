@@ -6,6 +6,7 @@ from django.core.paginator import Paginator
 from django.views.generic import ListView, DetailView, CreateView
 from .forms import CommentForm
 from taggit.models import Tag
+from django.db.models import Count
 
 
 class RecipeListView(ListView):
@@ -50,9 +51,15 @@ class RecipeDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         ingredients = self.object.recipes_ingredient.all()
+        recipe_tags_ids = self.object.tags.values_list('id', flat=True)
+        similar_recipes = Recipe.published.filter(tags__in=recipe_tags_ids)\
+                                          .exclude(id=self.object.id)
+        similar_recipes = similar_recipes.annotate(same_tags=Count('tags'))\
+                                         .order_by('-same_tags', '-publish')[:4]
         comments = self.object.comments.filter(active=True)
         form = CommentForm()
         context['ingredients'] = ingredients
+        context['similar_recipes'] = similar_recipes
         context['comments'] = comments
         context['form'] = form
         return context

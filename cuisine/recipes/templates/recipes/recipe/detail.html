@@ -17,6 +17,7 @@
             </p>
         {% endif %}
     {% endwith %}
+
     <p>Author: {{ recipe.author.username }}</p>
     <p class="date">Published: {{ recipe.publish }}</p>
     {% if ingredients %}
@@ -28,6 +29,14 @@
     {% endif %}
     <p>Description:</p>
     <p>{{ recipe.description|linebreaks }}</p>
+
+    <h2>Similar recipes</h2>
+    {% for recipe in similar_recipes %}
+        <p>
+            <a href="{{ recipe.get_absolute_url }}">{{ recipe.title }}</a>
+        </p>
+    {% endfor %}
+
     {% include 'recipes/recipe/comment.html' %}
     {% with comments.count as total_comments %}
         <h2>
