@@ -2,6 +2,11 @@ from django.contrib import admin
 from .models import *
 
 
+@admin.action(description='Опубликовать выбранные recipes')
+def make_published(modeladmin, request, queryset):
+    queryset.update(status='PB')
+
+
 @admin.register(Recipe)
 class RecipeAdmin(admin.ModelAdmin):
     list_display = ['title', 'slug', 'author', 'publish', 'status']
@@ -11,6 +16,7 @@ class RecipeAdmin(admin.ModelAdmin):
     raw_id_fields = ['author']
     date_hierarchy = 'publish'
     ordering = ['status', 'publish']
+    actions = [make_published]
 
 
 @admin.register(Product)
