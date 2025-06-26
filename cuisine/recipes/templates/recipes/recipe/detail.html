@@ -1,4 +1,5 @@
 {% extends 'recipes/base.html' %}
+{% load recipes_tags %}
 
 {% block title %}{{ recipe.title }}{% endblock %}
 
@@ -28,7 +29,7 @@
         </ul>
     {% endif %}
     <p>Description:</p>
-    <p>{{ recipe.description|linebreaks }}</p>
+    <p>{{ recipe.description|markdown }}</p>
 
     <h2>Similar recipes</h2>
     {% for recipe in similar_recipes %}

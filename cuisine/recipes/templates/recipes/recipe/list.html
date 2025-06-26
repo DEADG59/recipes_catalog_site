@@ -1,4 +1,5 @@
 {% extends 'recipes/base.html' %}
+{% load recipes_tags %}
 
 {% block title %}my site{% endblock %}
 
@@ -29,7 +30,7 @@
         <p class="date">
             Published {{ recipe.publish }} by {{ recipe.author }}
         </p>
-        {{ recipe.description|truncatewords:30|linebreaks }}
+        {{ recipe.description|markdown|truncatewords_html:10 }}
     {% endfor %}
     {% include 'pagination.html' with page=page_obj %}
 {% endblock %}

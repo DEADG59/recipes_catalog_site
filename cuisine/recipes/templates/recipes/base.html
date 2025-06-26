@@ -1,3 +1,4 @@
+{% load recipes_tags %}
 {% load static %}
 <!DOCTYPE html>
 <html>
@@ -11,8 +12,24 @@
         {% endblock %}
     </div>
     <div id="sidebar">
-        <h2>My site</h2>
-        <p>This is my site.</p>
+        <h2>
+            <a href="{% url 'recipes:recipe_list' %}">My site</a>
+        </h2>
+        <p>
+            This is my site.
+            total recipes: {% total_recipes %}
+        </p>
+        <h3>Latest recipes</h3>
+        {% show_latest_recipes 3 %}
+        <h3>Most commented recipes</h3>
+        {% get_most_commented_recipes as most_commented_recipes %}
+        <ul>
+            {% for recipe in most_commented_recipes %}
+            <li>
+                <a href="{{ recipe.get_absolute_url }}">{{ recipe.title }}</a>
+            </li>
+            {% endfor %}
+        </ul>
     </div>
 </body>
 </html>
