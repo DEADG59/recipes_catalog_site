@@ -15,9 +15,17 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.contrib.sitemaps.views import sitemap
+from recipes.sitemaps import RecipeSitemap
+
+
+sitemaps = {
+    'recipes': RecipeSitemap,
+}
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('recipes/', include('recipes.urls', namespace='recipes')),
+    path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
     path('__debug__/', include('debug_toolbar.urls')),
 ]
