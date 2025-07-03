@@ -8,4 +8,5 @@ urlpatterns = [
     path('tag/<slug:tag_slug>/', views.RecipeListView.as_view(), name='recipe_list_tag'),
     path('<int:year>/<int:month>/<int:day>/<slug:recipe_slug>', views.RecipeDetailView.as_view(), name='recipe_detail'),
     path('<int:recipe_id>/comment/', views.CommentCreateView.as_view(), name='recipe_comment'),
+    path('search/', views.RecipeSearch.as_view(), name='recipe_search'),
 ]

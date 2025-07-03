@@ -3,10 +3,11 @@ from django.urls import reverse_lazy
 from .models import Recipe, Comment
 from .pagination import Pagination
 from django.core.paginator import Paginator
-from django.views.generic import ListView, DetailView, CreateView
-from .forms import CommentForm
+from django.views.generic import ListView, DetailView, CreateView, FormView
+from .forms import CommentForm, SearchForm
 from taggit.models import Tag
 from django.db.models import Count
+from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank
 
 
 class RecipeListView(ListView):
@@ -84,3 +85,25 @@ class CommentCreateView(CreateView):
                                                                        recipe.publish.day,
                                                                        recipe.slug])
         return super().form_valid(form)
+
+
+class RecipeSearch(FormView):
+    form_class = SearchForm
+    template_name = 'recipes/recipe/search.html'
+    query = None
+    results = None
+
+    def get(self, request, *args, **kwargs):
+        if 'query' in request.GET:
+
+            query = request.GET.get('query')
+            search_vector = SearchVector('title', 'description', config='russian')
+            search_query = SearchQuery(query, config='russian')
+            results = Recipe.published.annotate(search=search_vector,
+                                                rank=SearchRank(search_vector, search_query)
+                                                ).filter(search=search_query).order_by('-rank')
+            context = self.get_context_data()
+            context['query'] = query
+            context['results'] = results
+            return render(request, self.template_name, context)
+        return self.render_to_response(self.get_context_data())

@@ -19,6 +19,7 @@
             This is my site.
             total recipes: {% total_recipes %}
         </p>
+        <h3><a href="{% url 'recipes:recipe_search' %}">Search recipes</a></h3>
         <h3>Latest recipes</h3>
         {% show_latest_recipes 3 %}
         <h3>Most commented recipes</h3>
