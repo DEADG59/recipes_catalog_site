@@ -8,6 +8,7 @@ from .forms import CommentForm, SearchForm
 from taggit.models import Tag
 from django.db.models import Count
 from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank
+from django.contrib.postgres.search import TrigramSimilarity
 
 
 class RecipeListView(ListView):
@@ -95,13 +96,15 @@ class RecipeSearch(FormView):
 
     def get(self, request, *args, **kwargs):
         if 'query' in request.GET:
-
             query = request.GET.get('query')
-            search_vector = SearchVector('title', 'description', config='russian')
-            search_query = SearchQuery(query, config='russian')
-            results = Recipe.published.annotate(search=search_vector,
-                                                rank=SearchRank(search_vector, search_query)
-                                                ).filter(search=search_query).order_by('-rank')
+            # search_vector = SearchVector('title', 'description', config='russian')
+            # search_query = SearchQuery(query, config='russian')
+            # results = Recipe.published.annotate(search=search_vector,
+            #     rank=SearchRank(search_vector, search_query)
+            # ).filter(search=search_query).order_by('-rank')
+            results = Recipe.published.annotate(
+                similarity=TrigramSimilarity('title', query),
+            ).filter(similarity__gt=0.1).order_by('-similarity')
             context = self.get_context_data()
             context['query'] = query
             context['results'] = results
