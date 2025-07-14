@@ -216,3 +216,40 @@ class CommentCreateViewTest(TestCase):
                                                                                   self.recipe.publish.month,
                                                                                   self.recipe.publish.day,
                                                                                   self.recipe.slug]))
+
+
+class RecipeSearchViewTest(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.user = User.objects.create(username='test user')
+        cls.recipe = Recipe.objects.create(title='django',
+                                           slug='django',
+                                           author=cls.user,
+                                           status=Recipe.Status.PUBLISHED)
+        cls.url = reverse('recipes:recipe_search')
+
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.user.delete()
+        del cls.url
+        super().tearDownClass()
+
+
+    def test_view_correct_url(self):
+        resp = self.client.get(self.url)
+        self.assertEqual(resp.status_code, 200)
+
+
+    def test_view_url_uses_correct_template(self):
+        resp = self.client.get(self.url)
+        self.assertEqual(resp.status_code, 200)
+        self.assertTemplateUsed(resp, 'recipes/recipe/search.html')
+
+
+    def test_view_valid_attributes(self):
+        view = RecipeSearch()
+        self.assertEqual(view.form_class, SearchForm)
+        self.assertEqual(view.template_name, 'recipes/recipe/search.html')
+        self.assertEqual(view.query, None)
+        self.assertEqual(view.results, None)
