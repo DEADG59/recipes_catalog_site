@@ -9,7 +9,7 @@ def make_published(modeladmin, request, queryset):
 
 @admin.register(Recipe)
 class RecipeAdmin(admin.ModelAdmin):
-    list_display = ['title', 'slug', 'author', 'publish', 'status']
+    list_display = ['id', 'title', 'slug', 'author', 'publish', 'status']
     list_filter = ['status', 'created', 'publish', 'author']
     search_fields = ['title', 'description']
     prepopulated_fields = {'slug': ('title',)}
