@@ -7,30 +7,44 @@
     <link href="{% static 'css/recipes.css' %}" rel="stylesheet">
 </head>
 <body>
-    <div id="content">
-        {% block content %}
-        {% endblock %}
+    <div id="header">
+        <span class="logo"><a href="{% url 'recipes:recipe_list' %}">Book Recipes</a></span>
+<!--        {% if request.user.is_authenticated %}
+            <ul>
+                <li {% if section == 'home' %}class="selected"{% endif %}>
+                    <a href="{% url 'recipes:recipe_list' %}">home</a>
+                </li>
+            </ul>
+        {% endif %}-->
+        <span class="user">
+            {% if request.user.is_authenticated %}
+                {{ request.user.username }},
+                <a href="{% url 'account:logout' %}">Logout</a>
+            {% else %}
+                <a href="{% url 'login' %}">Log-in</a>
+            {% endif %}
+        </span>
     </div>
-    <div id="sidebar">
-        <h2>
-            <a href="{% url 'recipes:recipe_list' %}">My site</a>
-        </h2>
-        <p>
-            This is my site.
-            total recipes: {% total_recipes %}
-        </p>
-        <h3><a href="{% url 'recipes:recipe_search' %}">Search recipes</a></h3>
-        <h3>Latest recipes</h3>
-        {% show_latest_recipes 3 %}
-        <h3>Most commented recipes</h3>
-        {% get_most_commented_recipes as most_commented_recipes %}
-        <ul>
-            {% for recipe in most_commented_recipes %}
-            <li>
-                <a href="{{ recipe.get_absolute_url }}">{{ recipe.title }}</a>
-            </li>
-            {% endfor %}
-        </ul>
+    <div id="main-wrapper">
+        <div id="content">
+            {% block content %}
+            {% endblock %}
+        </div>
+        <div id="sidebar">
+            <p>total recipes: {% total_recipes %}</p>
+            <h3><a href="{% url 'recipes:recipe_search' %}">Search recipes</a></h3>
+            <h3>Latest recipes</h3>
+            {% show_latest_recipes 3 %}
+            <h3>Most commented recipes</h3>
+            {% get_most_commented_recipes as most_commented_recipes %}
+            <ul>
+                {% for recipe in most_commented_recipes %}
+                <li>
+                    <a href="{{ recipe.get_absolute_url }}">{{ recipe.title }}</a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
     </div>
 </body>
 </html>

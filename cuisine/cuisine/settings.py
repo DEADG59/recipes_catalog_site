@@ -142,3 +142,17 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 INTERNAL_IPS = [
     '127.0.0.1',
 ]
+
+LOGIN_REDIRECT_URL = 'recipes:recipe_list'
+LOGIN_URL = 'login'
+LOGOUT_URL = 'account:logout'
+
+'''
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'suicideboysd@gmail.com'
+EMAIL_HOST_PASSWORD = 'dpdy caue mmxh bcvt' #'pcpttfotcybqtcsi'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+'''
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

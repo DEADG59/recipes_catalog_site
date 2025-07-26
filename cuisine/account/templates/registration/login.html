@@ -1,0 +1,19 @@
+{% extends 'recipes/base.html' %}
+
+{% block title %}Вход{% endblock %}
+
+{% block content %}
+    <h1>Вход</h1>
+    {% if form.errors %}
+        <p>Неверное имя пользователя или пароль.</p>
+    {% endif %}
+    <div class="login-form">
+        <form action="{% url 'login' %}" method="post">
+            {{ form.as_p }}
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ next }}">
+            <p><input type="submit" value="Войти"></p>
+        </form>
+        <p><a href="{% url 'password_reset' %}">Забыли пароль?</a></p>
+    </div>
+{% endblock %}
