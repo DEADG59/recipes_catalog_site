@@ -9,12 +9,13 @@ from taggit.models import Tag
 from django.db.models import Count
 from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank
 from django.contrib.postgres.search import TrigramSimilarity
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 class RecipeListView(ListView):
     model = Recipe
     context_object_name = 'recipes'
-    paginate_by = 3
+    paginate_by = 6
     template_name = 'recipes/recipe/list.html'
 
     def get_queryset(self):
@@ -67,7 +68,7 @@ class RecipeDetailView(DetailView):
         return context
 
 
-class CommentCreateView(CreateView):
+class CommentCreateView(LoginRequiredMixin, CreateView):
     model = Comment
     form_class = CommentForm
 
