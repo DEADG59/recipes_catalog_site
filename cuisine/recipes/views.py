@@ -82,6 +82,8 @@ class CommentCreateView(LoginRequiredMixin, CreateView):
                                     id=self.kwargs['recipe_id'],
                                     status=Recipe.Status.PUBLISHED)
         comment.recipe = recipe
+        comment.name = self.request.user
+        comment.email = self.request.user.email
         self.success_url = reverse_lazy('recipes:recipe_detail', args=[recipe.publish.year,
                                                                        recipe.publish.month,
                                                                        recipe.publish.day,
