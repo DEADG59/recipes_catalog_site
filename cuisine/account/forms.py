@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 import re
+from .models import Profile
 
 
 def validate_no_russian_chars(value):
@@ -58,4 +59,18 @@ class UserRegistrationForm(forms.ModelForm):
         user.set_password(self.cleaned_data['password2'])
         if commit:
             user.save()
+            Profile.objects.create(user=user)
         return user
+
+
+class UserEditForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['username','email']
+
+
+class ProfileEditForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ['photo']
+        labels = {'photo': 'Фото'}
