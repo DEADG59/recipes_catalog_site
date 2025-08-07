@@ -5,7 +5,7 @@ from .forms import *
 from django.views.generic import CreateView, TemplateView, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
-from django.http import HttpResponse
+from django.contrib import messages
 
 
 class UserLogoutView(auth_views.LogoutView):
@@ -36,7 +36,6 @@ class UserProfileView(DetailView):
         context['owner'] = False
         if self.request.user.username == self.object.username:
             context['owner'] = True
-        # print(context)
         return context
 
 
@@ -59,4 +58,7 @@ class UserProfileEditView(LoginRequiredMixin, TemplateView):
         if user_form.is_valid() and profile_form.is_valid():
             user_form.save()
             profile_form.save()
-        return HttpResponse(status=204)
+            messages.success(request, 'Профиль успешно обновлен')
+        return render(self.request,
+                      self.template_name,
+                      self.get_context_data())
