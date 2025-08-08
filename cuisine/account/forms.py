@@ -68,6 +68,18 @@ class UserEditForm(forms.ModelForm):
         model = User
         fields = ['username','email']
 
+    def clean_username(self):
+        username = self.cleaned_data['username']
+        if User.objects.exclude(id=self.instance.id).filter(username=username).exists():
+            raise forms.ValidationError('Это имя пользователя уже используется.')
+        return username
+
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        if User.objects.exclude(id=self.instance.id).filter(email=email).exists():
+            raise forms.ValidationError('Этот e-mail уже используется.')
+        return email
+
 
 class ProfileEditForm(forms.ModelForm):
     class Meta:
