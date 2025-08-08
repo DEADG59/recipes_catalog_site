@@ -15,11 +15,25 @@ class UserLogoutView(auth_views.LogoutView):
 class UserRegisterView(CreateView):
     form_class = UserRegistrationForm
     template_name = 'registration/register.html'
-    success_url = reverse_lazy('account:register_done')
+    success_url = reverse_lazy('login')
+
+    def form_valid(self, form):
+        messages.success(self.request, 'Вы успешно зарегистрировались, теперь вы можете войти')
+        return super().form_valid(form)
 
 
-class UserRegisterDoneView(TemplateView):
-    template_name = 'registration/register_done.html'
+class UserPasswordChangeView(auth_views.PasswordChangeView):
+    def form_valid(self, form):
+        messages.success(self.request, 'Пароль успешно изменен')
+        self.success_url = reverse_lazy('account:profile', args=[self.request.user])
+        return super().form_valid(form)
+
+
+class UserPasswordResetConfirmView(auth_views.PasswordResetConfirmView):
+    def form_valid(self, form):
+        messages.success(self.request, 'Новый пароль успешно сохранен')
+        self.success_url = reverse_lazy('login')
+        return super().form_valid(form)
 
 
 class UserProfileView(DetailView):
