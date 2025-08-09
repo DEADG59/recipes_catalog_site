@@ -7,6 +7,7 @@ app_name = 'account'
 
 urlpatterns = [
     path('', RecipeListView.as_view(), name='recipe_list'),
+    path('login/', views.UserLoginView.as_view(), name='login'),
     path('logout/', views.UserLogoutView.as_view(), name='logout'),
     path('password_change/', views.UserPasswordChangeView.as_view(), name='password_change'),
     path('reset/<str:uidb64>/<str:token>/', views.UserPasswordResetConfirmView.as_view(), name='password_reset_confirm'),

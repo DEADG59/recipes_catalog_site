@@ -1,8 +1,9 @@
 from django import forms
 from django.contrib.auth.models import User
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 import re
 from .models import Profile
+from django.utils.translation import gettext_lazy as _
 
 
 def validate_no_russian_chars(value):
@@ -61,6 +62,13 @@ class UserRegistrationForm(forms.ModelForm):
             user.save()
             Profile.objects.create(user=user)
         return user
+
+
+class LoginForm(AuthenticationForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['username'].label = 'Имя пользователя или e-mail'
+        self.error_messages['invalid_login'] = 'Пожалуйста, введите правильные имя пользователя или e-mail и пароль.'
 
 
 class UserEditForm(forms.ModelForm):

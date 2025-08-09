@@ -8,6 +8,10 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 
 
+class UserLoginView(auth_views.LoginView):
+    form_class = LoginForm
+
+
 class UserLogoutView(auth_views.LogoutView):
     next_page = reverse_lazy('login')
 
