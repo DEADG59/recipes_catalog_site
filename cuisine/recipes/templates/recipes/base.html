@@ -9,16 +9,9 @@
 <body>
     <div id="header">
         <span class="logo"><a href="{% url 'recipes:recipe_list' %}">Book Recipes</a></span>
-<!--        {% if request.user.is_authenticated %}
-            <ul>
-                <li {% if section == 'home' %}class="selected"{% endif %}>
-                    <a href="{% url 'recipes:recipe_list' %}">home</a>
-                </li>
-            </ul>
-        {% endif %}-->
         <span class="user">
             {% if request.user.is_authenticated %}
-                {{ request.user.username }},
+                <a href="{% url 'account:profile' request.user.username %}">{{ request.user.username }}</a>,
                 <a href="{% url 'account:logout' %}">Logout</a>
             {% else %}
                 <a href="{% url 'login' %}">Log-in</a>
@@ -27,6 +20,16 @@
     </div>
     <div id="main-wrapper">
         <div id="content">
+            {% if messages %}
+                <ul class="messages">
+                    {% for message in messages %}
+                        <li class="{{ message.tags }}">
+                            {{ message|safe }}
+                            <button type="button" id="btn-close" onclick="removeMessage()">x</button>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
             {% block content %}
             {% endblock %}
         </div>
@@ -46,5 +49,13 @@
             </ul>
         </div>
     </div>
+    <script>
+        function removeMessage() {
+            const element = document.getElementsByClassName('messages')[0];
+            element.remove();
+        }
+        {% block domready %}
+        {% endblock %}
+    </script>
 </body>
 </html>

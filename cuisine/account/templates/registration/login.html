@@ -4,9 +4,6 @@
 
 {% block content %}
     <h1>Вход</h1>
-    {% if form.errors %}
-        <p>Неверное имя пользователя или пароль.</p>
-    {% endif %}
     <div class="login-form">
         <form action="{% url 'login' %}" method="post">
             {{ form.as_p }}
